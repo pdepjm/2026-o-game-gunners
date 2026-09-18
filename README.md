@@ -1,5 +1,7 @@
-### [Nombre del juego]
+### 114
 
-* Integrante 1
-* Integrante 2
-* Etc...
+* Achata Fernandez, Mayerly Romina
+* Becerra, Ayelen Rosario
+* Frino, Jimena
+* Frutos, Matias Ignacio
+* Vega Echeverria, Gonzalo Ezequiel
