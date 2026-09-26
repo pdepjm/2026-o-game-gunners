@@ -1,11 +1,25 @@
 import wollok.game.*
+import example.*
 
-import example.pepita
-
-program PepitaGame {
-	game.title("Pepita")
+program L114Game {
+	// Configuración
+	game.title("114")
 	game.height(10)
 	game.width(10)
+	
+	// Visuales
+	game.addVisual(colectivo)
+	game.addVisual(pasajero)
 
+	// Eventos automáticos
+	const tick = game.tick(2000, { pasajero.moverse() }, false)
+	
+	// Comandos
+	keyboard.up().onPressDo({ colectivo.doblar(colectivo.position().up(1)) })
+	keyboard.down().onPressDo({ colectivo.doblar(colectivo.position().down(1)) })
+	keyboard.left().onPressDo({ colectivo.doblar(colectivo.position().left(1)) })
+	keyboard.right().onPressDo({ colectivo.doblar(colectivo.position().right(1)) })
+	
 	game.start()
+	tick.start()
 }
