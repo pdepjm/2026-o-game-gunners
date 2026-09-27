@@ -2,24 +2,46 @@ import wollok.game.*
 import example.*
 
 program L114Game {
-	// Configuración
 	game.title("114")
 	game.height(10)
 	game.width(10)
 	
-	// Visuales
+	game.ground("calle.png")
 	game.addVisual(colectivo)
 	game.addVisual(pasajero)
-
-	// Eventos automáticos
-	const tick = game.tick(2000, { pasajero.moverse() }, false)
+	game.addVisual(senialDesvio)
 	
-	// Comandos
-	keyboard.up().onPressDo({ colectivo.doblar(colectivo.position().up(1)) })
-	keyboard.down().onPressDo({ colectivo.doblar(colectivo.position().down(1)) })
-	keyboard.left().onPressDo({ colectivo.doblar(colectivo.position().left(1)) })
-	keyboard.right().onPressDo({ colectivo.doblar(colectivo.position().right(1)) })
+	const tickPasajero = game.tick(6000, { pasajero.moverse() }, false)
+	const tickSenial = game.tick(9000, { senialDesvio.moverse() }, false)
+	
+	game.onCollideDo(
+		pasajero,
+		{ colectivo =>
+			tickPasajero.stop()
+			colectivo.sumarPasajero()
+			game.say(colectivo, ("Tengo " + colectivo.pasajeros()) + " pasajeros")
+			pasajero.moverse()
+			return tickPasajero.start()
+		}
+	)
+	
+	game.onCollideDo(
+		senialDesvio,
+		{ colectivo =>
+			game.removeTickEvent("movimientoContinuo")
+			game.say(colectivo, "¡Perdí! ¡Me caí en un pozo!")
+			game.schedule(1000, { game.stop() })
+		}
+	)
+	
+	keyboard.up().onPressDo({ colectivo.doblar("arriba") })
+	keyboard.down().onPressDo({ colectivo.doblar("abajo") })
+	keyboard.left().onPressDo({ colectivo.doblar("izquierda") })
+	keyboard.right().onPressDo({ colectivo.doblar("derecha") })
+	
+	game.onTick(300, "movimientoContinuo", { colectivo.avanzar() })
 	
 	game.start()
-	tick.start()
+	tickPasajero.start()
+	tickSenial.start()
 }
