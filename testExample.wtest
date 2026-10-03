@@ -1,0 +1,10 @@
+import example.*
+
+describe "group of tests" {
+
+  test "Correcta suma de puntos" {
+    colectivo.sumarPasajero()
+    assert.equals(1, colectivo.pasajeros())
+  }
+
+}
