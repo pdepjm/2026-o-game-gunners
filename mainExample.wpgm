@@ -9,39 +9,19 @@ program L114Game {
 	game.ground("calle.png")
 	game.addVisual(colectivo)
 	game.addVisual(pasajero)
-	game.addVisual(senialDesvio)
+	game.addVisual(pozo)
 	
-	const tickPasajero = game.tick(6000, { pasajero.moverse() }, false)
-	const tickSenial = game.tick(9000, { senialDesvio.moverse() }, false)
+	keyboard.up().onPressDo({ colectivo.doblar(arriba) })
+	keyboard.down().onPressDo({ colectivo.doblar(abajo) })
+	keyboard.left().onPressDo({ colectivo.doblar(izquierda) })
+	keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 	
-	game.onCollideDo(
-		pasajero,
-		{ colectivo =>
-			tickPasajero.stop()
-			colectivo.sumarPasajero()
-			game.say(colectivo, ("Tengo " + colectivo.pasajeros()) + " pasajeros")
-			pasajero.moverse()
-			return tickPasajero.start()
-		}
-	)
+	game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
+	game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
+	game.onTick(9000, "movimientoPozo", { pozo.moverse() })
 	
-	game.onCollideDo(
-		senialDesvio,
-		{ colectivo =>
-			game.removeTickEvent("movimientoContinuo")
-			game.say(colectivo, "¡Perdí! ¡Me caí en un pozo!")
-			game.schedule(1000, { game.stop() })
-		}
-	)
-	
-	keyboard.up().onPressDo({ colectivo.doblar("arriba") })
-	keyboard.down().onPressDo({ colectivo.doblar("abajo") })
-	keyboard.left().onPressDo({ colectivo.doblar("izquierda") })
-	keyboard.right().onPressDo({ colectivo.doblar("derecha") })
-	
-	game.onTick(300, "movimientoContinuo", { colectivo.avanzar() })
+	game.onCollideDo(pasajero, { _ => pasajero.colisionarCon(colectivo) })
+	game.onCollideDo(pozo, { _ => pozo.colisionarCon(colectivo) })
 	
 	game.start()
-	tickPasajero.start()
-	tickSenial.start()
 }
