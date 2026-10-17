@@ -1,9 +1,10 @@
-import example.pepita
+import example.*
 
-describe "group of tests for pepita" {
+describe "group of tests" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+  test "Correcta suma de puntos" {
+    colectivo.sumarPasajero()
+    assert.equals(1, colectivo.pasajeros())
   }
 
 }
