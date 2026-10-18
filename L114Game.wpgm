@@ -3,30 +3,17 @@ import entidades.*
 import obstaculos.*
 import direcciones.*
 import calles.*
+import Inicioyfin.administrador
 
 program L114Game {
-	game.title("114")
-	game.height(15)
-	game.width(15)
-	
-	game.boardGround("calle.png")
-	game.addVisual(colectivo)
-	game.addVisual(pasajero)
-	game.addVisual(pozo)
-	
-	keyboard.up().onPressDo({ colectivo.doblar(arriba) })
-	keyboard.down().onPressDo({ colectivo.doblar(abajo) })
-	keyboard.left().onPressDo({ colectivo.doblar(izquierda) })
-	keyboard.right().onPressDo({ colectivo.doblar(derecha) })
-	
-	game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
-	game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
-	game.onTick(9000, "movimientoPozo", { pozo.moverse() })
-	
-	game.onCollideDo(pasajero, { _ => pasajero.colisionarCon(colectivo) })
-	game.onCollideDo(pozo, { _ => pozo.colisionarCon(colectivo) })
+    game.title("114")
+    game.height(15)
+    game.width(15)
+
+    // Arrancamos en la pantalla de inicio
+    administrador.iniciar()
 
 	generadorCalles.generar()
-	
-	game.start()
+
+    game.start()
 }
