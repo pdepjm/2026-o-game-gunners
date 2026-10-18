@@ -11,9 +11,8 @@ program L114Game {
     game.width(15)
 
     // Arrancamos en la pantalla de inicio
-    administrador.iniciar()
 
-	generadorCalles.generar()
+    administrador.iniciar()
 
     game.start()
 }

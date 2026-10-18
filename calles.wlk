@@ -26,13 +26,16 @@ object generadorCalles {
 		})	
 	} 
 
-    method generar() { 
-        (0 .. game.height() -1).forEach({ i =>
-            self.calleSalida(game.at(i, -1))
-            self.calleSalida(game.at(i, game.height()))
-            self.calleSalida(game.at(-1, i))
-            self.calleSalida(game.at(game.width(), i))
-        })
-    }
+   method generar() {
+    (0 .. game.width() - 1).forEach({ i =>
+        self.calleSalida(game.at(i, -1))
+        self.calleSalida(game.at(i, game.height()))
+    })
+
+    (0 .. game.height() - 1).forEach({ i =>
+        self.calleSalida(game.at(-1, i))
+        self.calleSalida(game.at(game.width(), i))
+    })
+}
 	}
     

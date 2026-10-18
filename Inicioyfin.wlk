@@ -2,6 +2,7 @@ import wollok.game.*
 import entidades.*
 import obstaculos.*
 import direcciones.*
+import calles.*
 
 object pantallaInicio {
     method position() = game.at(0, 0)
@@ -46,6 +47,8 @@ object administrador {
 
         game.onCollideDo(pasajero, { _ => pasajero.colisionarCon(colectivo) })
         game.onCollideDo(pozo, { _ => pozo.colisionarCon(colectivo) })
+        	
+        generadorCalles.generar()
     }
 
     method perder() {
