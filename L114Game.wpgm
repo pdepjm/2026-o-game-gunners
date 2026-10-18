@@ -2,6 +2,7 @@ import wollok.game.*
 import entidades.*
 import obstaculos.*
 import direcciones.*
+import calles.*
 
 program L114Game {
 	game.title("114")
@@ -24,6 +25,8 @@ program L114Game {
 	
 	game.onCollideDo(pasajero, { _ => pasajero.colisionarCon(colectivo) })
 	game.onCollideDo(pozo, { _ => pozo.colisionarCon(colectivo) })
+
+	generadorCalles.generar()
 	
 	game.start()
 }
