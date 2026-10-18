@@ -1,3 +1,6 @@
+import Inicioyfin.*
+
+
 class Obstaculo {
     var property position
     var property image
@@ -12,7 +15,7 @@ class Obstaculo {
     method colisionarCon(objeto){
 		game.removeTickEvent("movimientoColectivo")
 		game.say(objeto, mensajeColision)
-		game.schedule(500, { game.stop() })
+		game.schedule(500, {administrador.perder()})
     }
 }
 
