@@ -16,7 +16,7 @@ object pantallaGameOver {
 
 object fondoCalle {
     method position() = game.at(0, 0)
-    method image() = "calle.png" // Tu imagen de la calle de 15x15
+    method image() = "calle.png" 
 }
 
 object administrador {

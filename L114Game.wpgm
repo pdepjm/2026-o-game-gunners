@@ -3,7 +3,7 @@ import entidades.*
 import obstaculos.*
 import direcciones.*
 import calles.*
-import Inicioyfin.administrador
+import Inicioyfin.*
 
 program L114Game {
     game.title("114")
