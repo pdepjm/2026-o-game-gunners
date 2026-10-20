@@ -17,6 +17,7 @@ object pantallaGameOver {
 object fondoCalle {
     method position() = game.at(0, 0)
     method image() = "calle.png" 
+    method chocarCon(otro) {}
 }
 
 object administrador {
@@ -45,8 +46,8 @@ object administrador {
         game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
         game.onTick(9000, "movimientoPozo", { pozo.moverse() })
 
-        game.onCollideDo(pasajero, { objeto => pasajero.colisionarCon(colectivo) })
-        	
+        game.onCollideDo(pasajero, { objeto => objeto.chocarCon(pasajero) })        	
+        
         [pozo, cabra, pasajeroVip, clausura].forEach({ obstaculo => obstaculo.aparecer() })        	        	
         generadorCalles.generar()
     }

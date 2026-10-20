@@ -1,6 +1,8 @@
 class SeguimientoCalle {
   var property position
 
+  method chocarCon(otro) {} 
+
   method posicionContraria(posicion) {
     if (posicion.x() == -1) {
       return game.at(game.width() - 1, posicion.y())

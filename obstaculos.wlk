@@ -18,8 +18,9 @@ class Obstaculo {
     method aparecer() {
         game.addVisual(self)
         game.onTick(self.intervalo(), "movimiento" + self.identity(), { self.moverse() })
-        game.onCollideDo(self, { objeto => self.colisionarCon(objeto) })
-    }
+        game.onCollideDo(self, { objeto => objeto.chocarCon(self) })    }
+    
+    method chocarCon(otro) {}
 
     method colisionarCon(objeto){
 		game.removeTickEvent("movimientoColectivo")

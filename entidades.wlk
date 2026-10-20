@@ -40,8 +40,13 @@ object colectivo {
         administrador.perder()
         }
 
-}
-method chocoConsigoMismo() = vagones.any({ vagon => vagon.position() == position })
+    }
+
+    method chocarCon(otro) {
+        otro.colisionarCon(self)
+    }
+
+    method chocoConsigoMismo() = vagones.any({ vagon => vagon.position() == position })
 
     method sumarPasajero() {
         puntaje += 10
@@ -72,6 +77,7 @@ class Vagon {
     var property direccion 
     
     method image() = "medio114_" + direccion.nombre() + ".png"
+    method chocarCon(otro) {}
 }
 
 object pasajero {
@@ -84,6 +90,8 @@ object pasajero {
         const y = 0.randomUpTo(game.height()).truncate(0)
         position = game.at(x, y)
     }
+
+    method chocarCon(otro) {}
 
     method colisionarCon(objeto){
 		objeto.sumarPasajero()
