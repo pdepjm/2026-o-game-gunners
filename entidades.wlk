@@ -9,6 +9,14 @@ object colectivo {
 
     method image() = "cabeza114_" + direccion.nombre() + ".png"
     
+    method reiniciar() {
+        position = game.at(1, 1)
+        oldPosition = game.at(0, 1)
+        direccion = derecha
+        vagones = []
+        puntaje = 0
+    }
+    
     method doblar(nuevaDireccion) {
         direccion = nuevaDireccion
     }
@@ -30,10 +38,25 @@ object colectivo {
 
     method sumarPasajero() {
         puntaje += 10
+        self.agregarVagon()
+    }
+
+    method agregarVagones(cantidad) {
+        cantidad.times({ x => self.agregarVagon() })
+    }
+
+    method agregarVagon() {
         const nuevaDireccion = if (vagones.isEmpty()) direccion else vagones.last().direccion()
         const vagon = new Vagon(position = oldPosition, direccion = nuevaDireccion)
         vagones.add(vagon)
         game.addVisual(vagon)
+    }
+    
+    method perderVagon() {
+        const vagon = vagones.last()
+        vagones.remove(vagon)
+        game.removeVisual(vagon)
+        puntaje = (puntaje - 10).max(0)
     }
 }
 

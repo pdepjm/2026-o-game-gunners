@@ -29,25 +29,25 @@ object administrador {
 
     method jugar() {
         game.clear() 
+        colectivo.reiniciar()
         
         game.addVisual(fondoCalle)
 
         game.addVisual(colectivo)
         game.addVisual(pasajero)
-        game.addVisual(pozo)
 
         keyboard.up().onPressDo({ colectivo.doblar(arriba) })
         keyboard.down().onPressDo({ colectivo.doblar(abajo) })
         keyboard.left().onPressDo({ colectivo.doblar(izquierda) })
         keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 
-        game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
+        game.onTick(200, "movimientoColectivo", { colectivo.avanzar() })
         game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
         game.onTick(9000, "movimientoPozo", { pozo.moverse() })
 
-        game.onCollideDo(pasajero, { _ => pasajero.colisionarCon(colectivo) })
-        game.onCollideDo(pozo, { _ => pozo.colisionarCon(colectivo) })
+        game.onCollideDo(pasajero, { objeto => pasajero.colisionarCon(colectivo) })
         	
+        [pozo, cabra, pasajeroVip, clausura].forEach({ obstaculo => obstaculo.aparecer() })        	        	
         generadorCalles.generar()
     }
 
