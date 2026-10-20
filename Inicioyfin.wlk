@@ -41,7 +41,7 @@ object administrador {
         keyboard.left().onPressDo({ colectivo.doblar(izquierda) })
         keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 
-        game.onTick(200, "movimientoColectivo", { colectivo.avanzar() })
+        game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
         game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
         game.onTick(9000, "movimientoPozo", { pozo.moverse() })
 

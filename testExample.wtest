@@ -1,10 +1,71 @@
-// import example.*
+import entidades.*
+import obstaculos.*
+import direcciones.*
 
-// describe "group of tests" {
+describe "colectivo" {
 
-//   test "Correcta suma de puntos" {
-//     colectivo.sumarPasajero()
-//     assert.equals(1, colectivo.pasajeros())
-//   }
+  method initialize() {
+    game.width(15)
+    game.height(15)
+    colectivo.reiniciar()
+  }
 
-// }
+  test "arranca sin vagones y sin puntaje" {
+    assert.that(colectivo.vagones().isEmpty())
+    assert.equals(0, colectivo.puntaje())
+  }
+
+  test "sumar un pasajero suma 10 puntos y agrega un vagón" {
+    colectivo.sumarPasajero()
+    assert.equals(10, colectivo.puntaje())
+    assert.equals(1, colectivo.vagones().size())
+  }
+
+}
+
+describe "pasajero" {
+
+  method initialize() {
+    game.width(15)
+    game.height(15)
+    colectivo.reiniciar()
+  }
+
+  test "al chocar con el colectivo le suma un pasajero" {
+    pasajero.colisionarCon(colectivo)
+    assert.equals(10, colectivo.puntaje())
+    assert.equals(1, colectivo.vagones().size())
+  }
+}
+
+describe "direcciones" {
+
+  test "cada dirección avanza una casilla en su sentido" {
+    const p = game.at(5, 5)
+    assert.equals(game.at(5, 6), arriba.avanzar(p))
+    assert.equals(game.at(5, 4), abajo.avanzar(p))
+    assert.equals(game.at(4, 5), izquierda.avanzar(p))
+    assert.equals(game.at(6, 5), derecha.avanzar(p))
+  }
+}
+
+describe "obstáculos" {
+
+  method initialize() {
+    game.width(15)
+    game.height(15)
+    colectivo.reiniciar()
+  }
+
+  test "el vip agrega tres vagones al colectivo y no termina el juego" {
+    new Vip(position = game.origin()).colisionarCon(colectivo)
+    assert.equals(3, colectivo.vagones().size())
+  }
+
+  test "la cabra le saca un vagón al colectivo que lleva pasajeros" {
+    colectivo.agregarVagones(2)
+    new Cabra(position = game.origin()).colisionarCon(colectivo)
+    assert.equals(1, colectivo.vagones().size())
+  }
+
+}
