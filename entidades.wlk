@@ -1,4 +1,5 @@
 import direcciones.*
+import Inicioyfin.*
 
 object colectivo {
     var property position = game.at(1, 1)
@@ -16,7 +17,7 @@ object colectivo {
         vagones = []
         puntaje = 0
     }
-    
+
     method doblar(nuevaDireccion) {
         direccion = nuevaDireccion
     }
@@ -34,7 +35,13 @@ object colectivo {
             direccionAnterior = direccionActual
         })
         oldPosition = posicionAnterior
-    }
+
+        if (self.chocoConsigoMismo()) {
+        administrador.perder()
+        }
+
+}
+method chocoConsigoMismo() = vagones.any({ vagon => vagon.position() == position })
 
     method sumarPasajero() {
         puntaje += 10
