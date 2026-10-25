@@ -1,9 +1,3 @@
-
-object perdiste {
-    var property position = game.center()
-    method image() = "perdiste.png"
-}
-
 object arriba {
     const property nombre = "arriba"
 
