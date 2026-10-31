@@ -48,7 +48,7 @@ object administrador {
 
         game.onCollideDo(pasajero, { objeto => objeto.chocarCon(pasajero) })        	
         
-        [pozo, cabra, pasajeroVip, clausura].forEach({ obstaculo => obstaculo.aparecer() })        	        	
+        [pozo, cabra, pasajeroVip, clausura, manchaAceite].forEach({ obstaculo => obstaculo.aparecer() })        	        	
         generadorCalles.generar()
     }
 

@@ -87,7 +87,19 @@ class ClausuraDeCalle inherits Obstaculo {
     }
 }
 
+class ManchaAceite inherits Obstaculo {
+    override method image () = "aceite.png"
+    override method mensajeColision() = "¡Calle resbaladiza! Ve con cuidado"
+
+    override method colisionarCon(objeto) {
+        game.say(objeto, self.mensajeColision())
+        objeto.relentizar()
+        self.moverse()
+    }
+}
+
 const pozo = new Pozo(position = game.at(4, 4))
 const cabra = new Cabra(position = game.at(10, 10))
 const pasajeroVip = new Vip(position = game.at(2, 11))
 const clausura = new ClausuraDeCalle(position = game.at(12, 12))
+const manchaAceite = new ManchaAceite(position = game.at(5, 5))

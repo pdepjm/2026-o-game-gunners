@@ -7,14 +7,15 @@ object colectivo {
     var property vagones = []
     var direccion = derecha
     var property puntaje = 0
+    var primerVagon = null
 
     method image() = "cabeza114_" + direccion.nombre() + ".png"
     
     method reiniciar() {
         position = game.at(1, 1)
-        oldPosition = game.at(0, 1)
         direccion = derecha
         vagones = []
+        primerVagon = null
         puntaje = 0
     }
 
@@ -23,18 +24,14 @@ object colectivo {
     }
 
     method avanzar() {
-        var posicionAnterior = position
-        var direccionAnterior = direccion
+        const posicionAnterior = position
+        const direccionAnterior = direccion
+
         position = direccion.avanzar(position)
-        vagones.forEach({ vagon =>
-            const posicionActual = vagon.position()
-            const direccionActual = vagon.direccion()
-            vagon.position(posicionAnterior)
-            vagon.direccion(direccionAnterior)
-            posicionAnterior = posicionActual
-            direccionAnterior = direccionActual
-        })
-        oldPosition = posicionAnterior
+
+        if (primerVagon != null) {
+        primerVagon.seguirA(posicionAnterior, direccionAnterior)
+        }
 
         if (self.chocoConsigoMismo()) {
         administrador.perder()
@@ -57,27 +54,90 @@ object colectivo {
         cantidad.times({ x => self.agregarVagon() })
     }
 
-    method agregarVagon() {
-        const nuevaDireccion = if (vagones.isEmpty()) direccion else vagones.last().direccion()
-        const vagon = new Vagon(position = oldPosition, direccion = nuevaDireccion)
-        vagones.add(vagon)
-        game.addVisual(vagon)
+
+    
+    
+    method agregarVagon () {
+         var nuevoVagon = null
+        
+        if (vagones.isEmpty()) {
+        const posAtras = self.posicionAtras(position, direccion)
+        nuevoVagon = new Vagon(position = posAtras, direccion = direccion)
+        primerVagon = nuevoVagon
+        } else {
+        const ultimoVagon = vagones.last()
+        const posAtras = self.posicionAtras(ultimoVagon.position(), ultimoVagon.direccion())
+        nuevoVagon = new Vagon(position = posAtras, direccion = ultimoVagon.direccion())
+        ultimoVagon.siguiente(nuevoVagon)
+        }
+
+    vagones.add(nuevoVagon)
+    game.addVisual(nuevoVagon)
+    }
+
+
+
+    method posicionAtras(pos, dire) {
+     if (dire == arriba) {
+      return pos.down(1)
     }
     
+    if (dire == abajo) {
+     return pos.up(1) 
+    }
+
+    if (dire == derecha) {
+      return pos.left(1)
+    }
+
+      return pos.right(1)
+    }
+
     method perderVagon() {
-        const vagon = vagones.last()
-        vagones.remove(vagon)
-        game.removeVisual(vagon)
-        puntaje = (puntaje - 10).max(0)
+     if (!vagones.isEmpty()) {
+     const vagonAEliminar = vagones.last()
+     vagones.remove(vagonAEliminar)
+     game.removeVisual(vagonAEliminar)
+
+     if (vagones.isEmpty()) {
+      primerVagon = null
+    } else {
+    vagones.last().siguiente(null)
+    }
+    puntaje = (puntaje - 10).max(0)
+    }
+    }
+
+    method cambiarVelocidad(milisegundo) {
+        game.removeTickEvent("movimientoColectivo")
+        game.onTick(milisegundo, "movimientoColectivo", {self.avanzar()})
+    }
+
+    method relentizar() {
+        self.cambiarVelocidad(600)
+        game.schedule(5000, {self.cambiarVelocidad(300)})
     }
 }
 
 class Vagon {
     var property position
     var property direccion 
+    var property siguiente = null
     
     method image() = "medio114_" + direccion.nombre() + ".png"
     method chocarCon(otro) {}
+
+    method seguirA(nuevaPosicion, nuevaDireccion) {
+    const posicionPrevia = position
+    const direccionPrevia = direccion
+
+    position = nuevaPosicion
+    direccion = nuevaDireccion
+
+    if (siguiente != null) {
+    siguiente.seguirA(posicionPrevia, direccionPrevia)
+    }
+    }
 }
 
 object pasajero {
