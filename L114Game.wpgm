@@ -5,7 +5,7 @@ import direcciones.*
 import calles.*
 import Inicioyfin.*
 
-program  L114Game {
+program L114Game {
     game.title("114")
     game.height(15)
     game.width(15)

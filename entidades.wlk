@@ -11,8 +11,8 @@ object colectivo {
     method image() = "cabeza114_" + direccion.nombre() + ".png"
     
     method reiniciar() {
-        position = game.at(1, 1)
-        oldPosition = game.at(0, 1)
+        position = administrador.nivel().posicionInicial()
+        oldPosition = position.left(1)
         direccion = derecha
         vagones = []
         puntaje = 0
@@ -38,8 +38,16 @@ object colectivo {
 
         if (self.chocoConsigoMismo()) {
         administrador.perder()
+        } else if (administrador.nivel().esPared(position)) {
+            self.chocarConPared()
         }
 
+    }
+
+    method chocarConPared() {
+        game.removeTickEvent("movimientoColectivo")
+        game.say(self, "¡Perdí! ¡Choqué contra la pared!")
+        game.schedule(500, { administrador.perder() })
     }
 
     method chocarCon(otro) {
@@ -86,9 +94,7 @@ object pasajero {
     method image() = "pasajero.png"
     
     method moverse() {
-        const x = 0.randomUpTo(game.width()).truncate(0)
-        const y = 0.randomUpTo(game.height()).truncate(0)
-        position = game.at(x, y)
+        position = administrador.nivel().posicionAleatoria()
     }
 
     method chocarCon(otro) {}

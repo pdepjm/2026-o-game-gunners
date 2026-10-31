@@ -3,6 +3,7 @@ import entidades.*
 import obstaculos.*
 import direcciones.*
 import calles.*
+import niveles.*
 
 object pantallaInicio {
     method position() = game.at(0, 0)
@@ -19,20 +20,27 @@ object fondoCalle {
     method image() = "calle.png" 
     method chocarCon(otro) {}
 }
-
+object fondoParedes {
+    method position() = game.at(0, 0)
+    method image() = "calle2.png"
+    method chocarCon(otro) {}
+}
 object administrador {
-    
+    var property nivel = nivel1 
     method iniciar() {
         game.clear()
         game.addVisual(pantallaInicio) 
-        keyboard.space().onPressDo({ self.jugar() })
+        keyboard.space().onPressDo({ self.jugar(nivel1) })
+        keyboard.num1().onPressDo({ self.jugar(nivel1) })
+        keyboard.num2().onPressDo({ self.jugar(nivel2) })
     }
 
-    method jugar() {
+    method jugar(nivelElegido) {
         game.clear() 
+        nivel = nivelElegido
         colectivo.reiniciar()
         
-        game.addVisual(fondoCalle)
+        game.addVisual(nivel.fondo())
 
         game.addVisual(colectivo)
         game.addVisual(pasajero)
@@ -43,13 +51,19 @@ object administrador {
         keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 
         game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
+        if (nivel.pasajeroSeMueveSolo()) {
         game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
+        }
         game.onTick(9000, "movimientoPozo", { pozo.moverse() })
 
         game.onCollideDo(pasajero, { objeto => objeto.chocarCon(pasajero) })        	
         
-        [pozo, cabra, pasajeroVip, clausura].forEach({ obstaculo => obstaculo.aparecer() })        	        	
-        generadorCalles.generar()
+        [pozo, cabra, pasajeroVip, clausura].forEach({ obstaculo => obstaculo.aparecer() })
+        nivel.preparar()
+
+        [pasajero, pozo, cabra, pasajeroVip, clausura].forEach({ objeto =>
+            if (nivel.esPared(objeto.position())) objeto.moverse()
+        })
     }
 
     method perder() {
