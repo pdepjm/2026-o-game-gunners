@@ -10,9 +10,8 @@ class Obstaculo {
     method intervalo() = 9000
 
     method moverse() {
-        const x = 0.randomUpTo(game.width()).truncate(0)
-        const y = 0.randomUpTo(game.height()).truncate(0)
-        position = game.at(x, y)
+        position = administrador.nivel().posicionAleatoria()
+        
     }
 
     method aparecer() {
