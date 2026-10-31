@@ -25,7 +25,7 @@ class Obstaculo {
     method colisionarCon(objeto){
 		game.removeTickEvent("movimientoColectivo")
 		game.say(objeto, self.mensajeColision())
-		game.schedule(500, {administrador.perder()})
+		game.schedule(1000, {administrador.perder()})
     }
 }
 
