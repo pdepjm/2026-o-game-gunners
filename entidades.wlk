@@ -3,7 +3,6 @@ import Inicioyfin.*
 
 object colectivo {
     var property position = game.at(1, 1)
-    var oldPosition = game.at(0, 1)
     var property vagones = []
     var direccion = derecha
     var property puntaje = 0
@@ -13,7 +12,6 @@ object colectivo {
     
     method reiniciar() {
         position = administrador.nivel().posicionInicial()
-        oldPosition = position.left(1)
         direccion = derecha
         vagones = []
         primerVagon = null
@@ -21,7 +19,9 @@ object colectivo {
     }
 
     method doblar(nuevaDireccion) {
-        direccion = nuevaDireccion
+        if(direccion.opuesta() != nuevaDireccion && direccion != nuevaDireccion){
+            direccion = nuevaDireccion
+        }
     }
 
     method avanzar() {
@@ -31,15 +31,14 @@ object colectivo {
         position = direccion.avanzar(position)
 
         if (primerVagon != null) {
-        primerVagon.seguirA(posicionAnterior, direccionAnterior)
+            primerVagon.seguirA(posicionAnterior, direccionAnterior)
         }
 
         if (self.chocoConsigoMismo()) {
-        administrador.perder()
+            administrador.perder()
         } else if (administrador.nivel().esPared(position)) {
             self.chocarConPared()
         }
-
     }
 
     method chocarConPared() {
@@ -63,58 +62,40 @@ object colectivo {
         cantidad.times({ x => self.agregarVagon() })
     }
 
-
-    
-    
     method agregarVagon () {
-         var nuevoVagon = null
+        var nuevoVagon = null
         
         if (vagones.isEmpty()) {
-        const posAtras = self.posicionAtras(position, direccion)
-        nuevoVagon = new Vagon(position = posAtras, direccion = direccion)
-        primerVagon = nuevoVagon
+            const posAtras = self.posicionAtras(position, direccion)
+            nuevoVagon = new Vagon(position = posAtras, direccion = direccion)
+            primerVagon = nuevoVagon
         } else {
-        const ultimoVagon = vagones.last()
-        const posAtras = self.posicionAtras(ultimoVagon.position(), ultimoVagon.direccion())
-        nuevoVagon = new Vagon(position = posAtras, direccion = ultimoVagon.direccion())
-        ultimoVagon.siguiente(nuevoVagon)
+            const ultimoVagon = vagones.last()
+            const direccionCola = if (ultimoVagon.direccionAnterior() == null) ultimoVagon.direccion() else ultimoVagon.direccionAnterior()
+            const posAtras = self.posicionAtras(ultimoVagon.position(), direccionCola)
+            nuevoVagon = new Vagon(position = posAtras, direccion = direccionCola)
+            ultimoVagon.siguiente(nuevoVagon)
         }
 
-    vagones.add(nuevoVagon)
-    game.addVisual(nuevoVagon)
+        vagones.add(nuevoVagon)
+        game.addVisual(nuevoVagon)
     }
 
-
-
-    method posicionAtras(pos, dire) {
-     if (dire == arriba) {
-      return pos.down(1)
-    }
-    
-    if (dire == abajo) {
-     return pos.up(1) 
-    }
-
-    if (dire == derecha) {
-      return pos.left(1)
-    }
-
-      return pos.right(1)
-    }
+    method posicionAtras(pos, dire) = dire.opuesta().avanzar(pos)
 
     method perderVagon() {
-     if (!vagones.isEmpty()) {
-     const vagonAEliminar = vagones.last()
-     vagones.remove(vagonAEliminar)
-     game.removeVisual(vagonAEliminar)
+        if (!vagones.isEmpty()) {
+            const vagonAEliminar = vagones.last()
+            vagones.remove(vagonAEliminar)
+            game.removeVisual(vagonAEliminar)
 
-     if (vagones.isEmpty()) {
-      primerVagon = null
-    } else {
-    vagones.last().siguiente(null)
-    }
-    puntaje = (puntaje - 10).max(0)
-    }
+            if (vagones.isEmpty()) {
+                primerVagon = null
+            } else {
+                vagones.last().siguiente(null)
+            }
+            puntaje = (puntaje - 10).max(0)
+        }
     }
 
     method cambiarVelocidad(milisegundo) {
@@ -132,20 +113,30 @@ class Vagon {
     var property position
     var property direccion 
     var property siguiente = null
+    var property direccionAnterior = null
     
-    method image() = "medio114_" + direccion.nombre() + ".png"
+    method prefijoImagen() {
+        if (direccionAnterior != null && direccionAnterior != direccion) {
+            return "curva114_" + direccionAnterior.nombre() + "_"
+        } else {
+            return "medio114_"
+        }
+    }
+
+    method image() = self.prefijoImagen() + direccion.nombre() + ".png"
     method chocarCon(otro) {}
 
     method seguirA(nuevaPosicion, nuevaDireccion) {
-    const posicionPrevia = position
-    const direccionPrevia = direccion
+        const posicionPrevia = position
+        const direccionPrevia = direccion
 
-    position = nuevaPosicion
-    direccion = nuevaDireccion
+        position = nuevaPosicion
+        direccion = nuevaDireccion
+        direccionAnterior = direccionPrevia
 
-    if (siguiente != null) {
-    siguiente.seguirA(posicionPrevia, direccionPrevia)
-    }
+        if (siguiente != null) {
+            siguiente.seguirA(posicionPrevia, direccionPrevia)
+        }
     }
 }
 

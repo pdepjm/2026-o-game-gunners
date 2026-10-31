@@ -4,6 +4,8 @@ object arriba {
     method avanzar(posicion) {
         return posicion.up(1)
     }
+
+    method opuesta() = abajo
 }
 
 object abajo {
@@ -12,6 +14,8 @@ object abajo {
     method avanzar(posicion) {
         return posicion.down(1)
     }
+
+    method opuesta() = arriba
 }
 object izquierda {
     const property nombre = "izquierda"
@@ -19,6 +23,8 @@ object izquierda {
     method avanzar(posicion) {
         return posicion.left(1)
     }
+
+    method opuesta() = derecha
 }
 
 object derecha {
@@ -27,4 +33,6 @@ object derecha {
     method avanzar(posicion) {
         return posicion.right(1)
     }
+
+    method opuesta() = izquierda
 }
