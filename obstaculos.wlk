@@ -56,6 +56,7 @@ class Vip inherits Obstaculo {
     override method colisionarCon(objeto) {
         game.say(objeto, self.mensajeColision())
         objeto.agregarVagones(3)
+        objeto.puntaje(objeto.puntaje() + 30)
         self.moverse()
     }
 }

@@ -25,6 +25,13 @@ object fondoParedes {
     method image() = "calle2.png"
     method chocarCon(otro) {}
 }
+
+object marcador {
+    method position() = game.at(1, 14) 
+    method text() = "PUNTOS: " + colectivo.puntaje().toString()
+    method textColor() = "FFFF00FF" 
+}
+
 object administrador {
     var property nivel = nivel1 
     method iniciar() {
@@ -41,6 +48,7 @@ object administrador {
         colectivo.reiniciar()
         
         game.addVisual(nivel.fondo())
+        game.addVisual(marcador)
 
         game.addVisual(colectivo)
         game.addVisual(pasajero)

@@ -10,8 +10,6 @@ program L114Game {
     game.height(15)
     game.width(15)
 
-    // Arrancamos en la pantalla de inicio
-
     administrador.iniciar()
 
     game.start()
