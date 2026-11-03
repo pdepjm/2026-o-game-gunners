@@ -15,6 +15,10 @@ object pantallaGameOver {
     method image() = "pantalla_gameover.png"
 }
 
+object pantallaConVidas {
+    method position() = game.at(0, 0)
+    method image() = "pantalla_con_vidas.png"
+}
 object fondoCalle {
     method position() = game.at(0, 0)
     method image() = "calle.png" 
@@ -38,6 +42,13 @@ object marcadorFinal {
     method textColor() = "FFFFFFFF"
 }
 
+object marcadorVidas {
+    method position() = game.at(6, 14)
+    method text() = "VIDAS: " + colectivo.vidas().toString()
+    method textColor() = "FF5050FF"
+    method chocarCon(otro) {}
+}
+
 object administrador {
     var property nivel = nivel1 
     method iniciar() {
@@ -49,14 +60,33 @@ object administrador {
     }
 
     method jugar(nivelElegido) {
-        game.clear() 
+
         nivel = nivelElegido
         colectivo.reiniciar()
+        self.armarPartida()
+    }
+
+    method despejarObstaculosDe(posicion) {
+        const obstaculos = [pozo, cabra, pasajeroVip, clausura, manchaAceite, corazon]
+        obstaculos.filter({ o => o.position() == posicion }).forEach({ o => o.moverse() })
+    }
+
+    method continuarConVida() {
+        colectivo.gastarVida()
+        self.armarPartida()
+        self.despejarObstaculosDe(colectivo.position())
+    }
+
+    
+    method armarPartida() {
+        game.clear() 
         
         game.addVisual(nivel.fondo())
         game.addVisual(marcador)
+        game.addVisual(marcadorVidas)
 
         game.addVisual(colectivo)
+        colectivo.vagones().forEach({ vagon => game.addVisual(vagon) })
         game.addVisual(pasajero)
 
         keyboard.up().onPressDo({ colectivo.doblar(arriba) })
@@ -72,18 +102,25 @@ object administrador {
 
         game.onCollideDo(pasajero, { objeto => objeto.chocarCon(pasajero) })        	
         
-        [pozo, cabra, pasajeroVip, clausura, manchaAceite].forEach({ obstaculo => obstaculo.aparecer() })
+        [pozo, cabra, pasajeroVip, clausura, manchaAceite, corazon].forEach({ obstaculo => obstaculo.aparecer() })
         nivel.preparar()
 
-        [pasajero, pozo, cabra, pasajeroVip, clausura, manchaAceite].forEach({ objeto =>
+        [pasajero, pozo, cabra, pasajeroVip, clausura, manchaAceite, corazon].forEach({ objeto =>
             if (nivel.esPared(objeto.position())) objeto.moverse()
         })
     }
 
-    method perder() {
+    
+     method perder() {
         game.clear()
-        game.addVisual(pantallaGameOver) 
-        game.addVisual(marcadorFinal)
-        keyboard.space().onPressDo({ self.iniciar() })
+        if (colectivo.tieneVidas()) {
+            game.addVisual(pantallaConVidas)
+            keyboard.space().onPressDo({ self.iniciar() })
+            keyboard.r().onPressDo({ self.continuarConVida() })
+        } else {
+            game.addVisual(pantallaGameOver)
+            game.addVisual(marcadorFinal)
+            keyboard.space().onPressDo({ self.iniciar() })
+        }
     }
 }

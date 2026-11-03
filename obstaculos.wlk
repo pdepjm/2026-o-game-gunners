@@ -98,8 +98,21 @@ class ManchaAceite inherits Obstaculo {
     }
 }
 
+class Corazon inherits Obstaculo {
+    override method image() = "vida.png"
+    override method intervalo() = 7000
+    override method mensajeColision() = "¡Gané una vida!"
+
+    override method colisionarCon(objeto) {
+        game.say(objeto, self.mensajeColision())
+        objeto.sumarVida()
+        self.moverse()
+    }
+}
+
 const pozo = new Pozo(position = game.at(4, 4))
 const cabra = new Cabra(position = game.at(10, 10))
 const pasajeroVip = new Vip(position = game.at(2, 11))
 const clausura = new ClausuraDeCalle(position = game.at(12, 12))
 const manchaAceite = new ManchaAceite(position = game.at(5, 5))
+const corazon = new Corazon(position = game.at(8, 8))

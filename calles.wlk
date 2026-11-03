@@ -28,7 +28,7 @@ object generadorCalles {
 		})	
 	} 
 
-   method generar() {
+  method generar() {
     (0 .. game.width() - 1).forEach({ i =>
         self.calleSalida(game.at(i, -1))
         self.calleSalida(game.at(i, game.height()))
@@ -38,6 +38,6 @@ object generadorCalles {
         self.calleSalida(game.at(-1, i))
         self.calleSalida(game.at(game.width(), i))
     })
+  }
 }
-	}
     

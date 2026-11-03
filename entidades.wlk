@@ -6,6 +6,7 @@ object colectivo {
     var property vagones = []
     var direccion = derecha
     var property puntaje = 0
+    var property vidas = 0
     var primerVagon = null
 
     method image() = "cabeza114_" + direccion.nombre() + ".png"
@@ -16,6 +17,20 @@ object colectivo {
         vagones = []
         primerVagon = null
         puntaje = 0
+        vidas = 0
+    }
+
+    method tieneVidas() = vidas > 0
+
+    method sumarVida() {
+        vidas += 1
+    }
+
+    method gastarVida() {
+        vidas = (vidas - 1).max(0)
+        if (administrador.nivel().esPared(position)) {
+            position = direccion.opuesta().avanzar(position)
+        }
     }
 
     method doblar(nuevaDireccion) {
