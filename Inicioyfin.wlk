@@ -32,6 +32,12 @@ object marcador {
     method textColor() = "FFFF00FF" 
 }
 
+object marcadorFinal {
+    method position() = game.at(7, 11) 
+    method text() = "PUNTAJE FINAL: " + colectivo.puntaje().toString()
+    method textColor() = "FFFFFFFF"
+}
+
 object administrador {
     var property nivel = nivel1 
     method iniciar() {
@@ -77,6 +83,7 @@ object administrador {
     method perder() {
         game.clear()
         game.addVisual(pantallaGameOver) 
+        game.addVisual(marcadorFinal)
         keyboard.space().onPressDo({ self.iniciar() })
     }
 }
