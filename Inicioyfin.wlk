@@ -34,6 +34,7 @@ object marcador {
     method position() = game.at(1, 14) 
     method text() = "PUNTOS: " + colectivo.puntaje().toString()
     method textColor() = "FFFF00FF" 
+    method chocarCon(otro) {}
 }
 
 object marcadorFinal {
@@ -60,23 +61,15 @@ object administrador {
     }
 
     method jugar(nivelElegido) {
-
         nivel = nivelElegido
         colectivo.reiniciar()
         self.armarPartida()
     }
 
-    method despejarObstaculosDe(posicion) {
-        const obstaculos = [pozo, cabra, pasajeroVip, clausura, manchaAceite, corazon]
-        obstaculos.filter({ o => o.position() == posicion }).forEach({ o => o.moverse() })
-    }
-
     method continuarConVida() {
         colectivo.gastarVida()
         self.armarPartida()
-        self.despejarObstaculosDe(colectivo.position())
     }
-
     
     method armarPartida() {
         game.clear() 

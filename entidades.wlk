@@ -28,9 +28,13 @@ object colectivo {
 
     method gastarVida() {
         vidas = (vidas - 1).max(0)
-        if (administrador.nivel().esPared(position)) {
-            position = direccion.opuesta().avanzar(position)
-        }
+        position = administrador.nivel().posicionInicial()
+        direccion = derecha
+        vagones.forEach({ vagon =>
+            vagon.position(position)
+            vagon.direccion(direccion)
+            vagon.direccionAnterior(null)
+        })
     }
 
     method doblar(nuevaDireccion) {
