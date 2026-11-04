@@ -87,7 +87,7 @@ object administrador {
         keyboard.left().onPressDo({ colectivo.doblar(izquierda) })
         keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 
-        game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
+        game.onTick(colectivo.velocidad(), "movimientoColectivo", { colectivo.avanzar() })
         if (nivel.pasajeroSeMueveSolo()) {
         game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
         }
@@ -104,7 +104,7 @@ object administrador {
     }
 
     
-     method perder() {
+    method perder() {
         game.clear()
         if (colectivo.tieneVidas()) {
             game.addVisual(pantallaConVidas)

@@ -4,9 +4,10 @@ import Inicioyfin.*
 object colectivo {
     var property position = game.at(1, 1)
     var property vagones = []
-    var direccion = derecha
+    var property direccion = derecha
     var property puntaje = 0
     var property vidas = 0
+    var property velocidad = 300
     var primerVagon = null
 
     method image() = "cabeza114_" + direccion.nombre() + ".png"
@@ -18,6 +19,7 @@ object colectivo {
         primerVagon = null
         puntaje = 0
         vidas = 0
+        velocidad = 300
     }
 
     method tieneVidas() = vidas > 0
@@ -117,9 +119,10 @@ object colectivo {
         }
     }
 
-    method cambiarVelocidad(milisegundo) {
+    method cambiarVelocidad(nuevaVelocidad) {
+        velocidad = nuevaVelocidad
         game.removeTickEvent("movimientoColectivo")
-        game.onTick(milisegundo, "movimientoColectivo", {self.avanzar()})
+        game.onTick(nuevaVelocidad, "movimientoColectivo", {self.avanzar()})
     }
 
     method relentizar() {
