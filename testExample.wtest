@@ -49,7 +49,7 @@ describe "Pasajeros" {
     }
 
     test "Al chocar con el colectivo le suma un vagón y 10 puntos" {
-        pasajero.colisionarCon(colectivo)
+        pasajero.colisionarConColectivo()
         assert.equals(10, colectivo.puntaje())
         assert.equals(1, colectivo.vagones().size())
     }
@@ -61,7 +61,7 @@ describe "Pasajeros" {
     }
 
     test "El pasajero vip agrega tres vagones al colectivo y 30 puntos" {
-        pasajeroVip.colisionarCon(colectivo)
+        pasajeroVip.colisionarConColectivo()
         assert.equals(3, colectivo.vagones().size())
         assert.equals(30, colectivo.puntaje())
     }
@@ -99,45 +99,45 @@ describe "Obstáculos" {
 
     test "La cabra le saca un vagón al colectivo que lleva pasajeros" {
         colectivo.agregarVagones(2)
-        cabra.colisionarCon(colectivo)
+        cabra.colisionarConColectivo()
         assert.equals(1, colectivo.vagones().size())
     }
 
     test "La cabra hace perder al colectivo sin vagones" {
-        cabra.colisionarCon(colectivo)
+        cabra.colisionarConColectivo()
         assert.that(game.hasVisual(pantallaGameOver))
     }
 
     test "Al caer en un pozo se pierde automáticamente" {
-        pozo.colisionarCon(colectivo)
+        pozo.colisionarConColectivo()
         assert.that(game.hasVisual(pantallaGameOver))
     }
 
     test "Al chocar con un corazón se suma una vida extra" {
-        corazon.colisionarCon(colectivo)
+        corazon.colisionarConColectivo()
         assert.equals(1, colectivo.vidas())
     }
 
     test "La mancha de aceite no hace perder ni quita vagones" {
         colectivo.agregarVagones(2)
-        manchaAceite.colisionarCon(colectivo)
+        manchaAceite.colisionarConColectivo()
         assert.equals(2, colectivo.vagones().size())
         assert.notThat(game.hasVisual(pantallaGameOver))
     }
 
     test "La mancha de aceite disminuye la velocidad del colectivo" {
-        manchaAceite.colisionarCon(colectivo)
+        manchaAceite.colisionarConColectivo()
         assert.equals(600, colectivo.velocidad())
     }
 
     test "Al chocar con el cono se clausura una parte del tablero" {
-        clausura.colisionarCon(colectivo)
+        clausura.colisionarConColectivo()
         assert.equals(15, game.allVisuals().count({ o => o.image() == "valla.png" }))
     }
 
     test "La clausura no hace perder ni quita vagones" {
         colectivo.agregarVagones(2)
-        clausura.colisionarCon(colectivo)
+        clausura.colisionarConColectivo()
         assert.equals(2, colectivo.vagones().size())
         assert.notThat(game.hasVisual(pantallaGameOver))
     }

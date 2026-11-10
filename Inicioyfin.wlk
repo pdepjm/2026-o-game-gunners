@@ -81,6 +81,7 @@ object administrador {
         game.addVisual(colectivo)
         colectivo.vagones().forEach({ vagon => game.addVisual(vagon) })
         game.addVisual(pasajero)
+        game.addVisual(pasajeroVip)
 
         keyboard.up().onPressDo({ colectivo.doblar(arriba) })
         keyboard.down().onPressDo({ colectivo.doblar(abajo) })
@@ -88,17 +89,20 @@ object administrador {
         keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 
         game.onTick(colectivo.velocidad(), "movimientoColectivo", { colectivo.avanzar() })
+
         if (nivel.pasajeroSeMueveSolo()) {
-        game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
+            game.onTick(6000, "movimientoPasajeros", { pasajero.moverse(); pasajeroVip.moverse() })
         }
+
         game.onTick(9000, "movimientoPozo", { pozo.moverse() })
 
-        game.onCollideDo(pasajero, { objeto => objeto.chocarCon(pasajero) })        	
+        game.onCollideDo(pasajero, { objeto => objeto.chocarCon(pasajero) })    
+        game.onCollideDo(pasajeroVip, { objeto => objeto.chocarCon(pasajeroVip) })        	
         
-        [pozo, cabra, pasajeroVip, clausura, manchaAceite, corazon].forEach({ obstaculo => obstaculo.aparecer() })
+        [pozo, cabra, clausura, manchaAceite, corazon].forEach({ obstaculo => obstaculo.aparecer() })
         nivel.preparar()
 
-        [pasajero, pozo, cabra, pasajeroVip, clausura, manchaAceite, corazon].forEach({ objeto =>
+        [pasajero, pozo, cabra, clausura, manchaAceite, corazon].forEach({ objeto =>
             if (nivel.esPared(objeto.position())) objeto.moverse()
         })
     }
