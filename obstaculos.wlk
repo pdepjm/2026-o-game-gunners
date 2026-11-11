@@ -1,30 +1,33 @@
+import entidades.*
 import Inicioyfin.*
-
 
 class Obstaculo {
     var property position
-    
+
     method image()
     method mensajeColision()
-
     method intervalo() = 9000
 
     method moverse() {
         position = administrador.nivel().posicionAleatoria()
-        
     }
 
     method aparecer() {
         game.addVisual(self)
         game.onTick(self.intervalo(), "movimiento" + self.identity(), { self.moverse() })
-        game.onCollideDo(self, { objeto => objeto.chocarCon(self) })    }
+        game.onCollideDo(self, { objeto => objeto.chocarCon(self) })
+    }
     
     method chocarCon(otro) {}
 
-    method colisionarCon(objeto){
-		game.removeTickEvent("movimientoColectivo")
-		game.say(objeto, self.mensajeColision())
+    method colisionarConColectivo(){
+		game.say(colectivo, self.mensajeColision())
 		administrador.perder()
+    }
+
+    method tiempoDeEspera(){
+        game.removeVisual(self)
+        game.schedule(self.intervalo(), { game.addVisual(self) })
     }
 }
 
@@ -38,13 +41,9 @@ class Cabra inherits Obstaculo {
     override method intervalo() = 3000
     override method mensajeColision() = "¡Perdí! ¡Me comí una cabra!"
 
-    override method colisionarCon(objeto) {
-        if (objeto.vagones().isEmpty()) {
-            super(objeto)
-        } else {
-            objeto.perderVagon()
-            self.moverse()
-        }
+    override method colisionarConColectivo() {
+        colectivo.perderVagon()
+        self.tiempoDeEspera()
     }
 }
 
@@ -53,10 +52,10 @@ class Vip inherits Obstaculo {
     override method intervalo() = 5000
     override method mensajeColision() = "¡Ahora tengo tres colas más!"
 
-    override method colisionarCon(objeto) {
-        game.say(objeto, self.mensajeColision())
-        objeto.agregarVagones(3)
-        objeto.puntaje(objeto.puntaje() + 30)
+    override method colisionarConColectivo() {
+        game.say(colectivo, self.mensajeColision())
+        colectivo.agregarVagones(3)
+        colectivo.puntaje(colectivo.puntaje() + 30)
         self.moverse()
     }
 }
@@ -73,8 +72,8 @@ class ClausuraDeCalle inherits Obstaculo {
     override method image() = "cono.png"
     override method mensajeColision() = "¡Calle clausurada por obras!"
 
-    override method colisionarCon(objeto) {
-        game.say(objeto, self.mensajeColision())
+    override method colisionarConColectivo() {
+        game.say(colectivo, self.mensajeColision())
         const columnas = (0 .. game.width() - 1)
         const bloques = []
         columnas.forEach({ x =>
@@ -91,9 +90,9 @@ class ManchaAceite inherits Obstaculo {
     override method image () = "aceite.png"
     override method mensajeColision() = "¡Calle resbaladiza! Ve con cuidado"
 
-    override method colisionarCon(objeto) {
-        game.say(objeto, self.mensajeColision())
-        objeto.relentizar()
+    override method colisionarConColectivo() {
+        game.say(colectivo, self.mensajeColision())
+        colectivo.relentizar()
         self.moverse()
     }
 }
@@ -103,16 +102,16 @@ class Corazon inherits Obstaculo {
     override method intervalo() = 7000
     override method mensajeColision() = "¡Gané una vida!"
 
-    override method colisionarCon(objeto) {
-        game.say(objeto, self.mensajeColision())
-        objeto.sumarVida()
+    override method colisionarConColectivo() {
+        game.say(colectivo, self.mensajeColision())
+        colectivo.sumarVida()
+        self.tiempoDeEspera()
         self.moverse()
     }
 }
 
 const pozo = new Pozo(position = game.at(4, 4))
 const cabra = new Cabra(position = game.at(10, 10))
-const pasajeroVip = new Vip(position = game.at(2, 11))
 const clausura = new ClausuraDeCalle(position = game.at(12, 12))
 const manchaAceite = new ManchaAceite(position = game.at(5, 5))
 const corazon = new Corazon(position = game.at(8, 8))

@@ -69,14 +69,14 @@ object colectivo {
     }
 
     method chocarCon(otro) {
-        otro.colisionarCon(self)
+        otro.colisionarConColectivo()
     }
 
     method chocoConsigoMismo() = vagones.any({ vagon => vagon.position() == position })
 
-    method sumarPasajero() {
-        puntaje += 10
-        self.agregarVagon()
+    method sumarPasajeros(cantidad) {
+        puntaje += 10 * cantidad
+        self.agregarVagones(cantidad)
     }
 
     method agregarVagones(cantidad) {
@@ -116,6 +116,8 @@ object colectivo {
                 vagones.last().siguiente(null)
             }
             puntaje = (puntaje - 10).max(0)
+        } else {
+            administrador.perder()
         }
     }
 
@@ -173,8 +175,25 @@ object pasajero {
 
     method chocarCon(otro) {}
 
-    method colisionarCon(objeto){
-		objeto.sumarPasajero()
+    method colisionarConColectivo(){
+		colectivo.sumarPasajeros(1)
+		self.moverse()
+    }
+}
+
+object pasajeroVip {
+    var property position = game.at(2, 11)
+    
+    method image() = "pasajero_vip.png"
+    
+    method moverse() {
+        position = administrador.nivel().posicionAleatoria()
+    }
+
+    method chocarCon(otro) {}
+
+    method colisionarConColectivo(){
+		colectivo.sumarPasajeros(3)
 		self.moverse()
     }
 }
