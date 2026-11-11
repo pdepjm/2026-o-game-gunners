@@ -128,7 +128,7 @@ object colectivo {
         game.onTick(nuevaVelocidad, "movimientoColectivo", { self.avanzar() })
     }
 
-    method relentizar() {
+    method ralentizar() {
         self.cambiarVelocidad(600)
         game.schedule(5000, { self.cambiarVelocidad(300) })
     }

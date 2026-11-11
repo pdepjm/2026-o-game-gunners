@@ -79,7 +79,7 @@ class ManchaAceite inherits Obstaculo {
 
     override method colisionarConColectivo() {
         game.say(colectivo, self.mensajeColision())
-        colectivo.relentizar()
+        colectivo.ralentizar()
         self.moverse()
     }
 }

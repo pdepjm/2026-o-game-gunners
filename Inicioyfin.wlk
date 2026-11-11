@@ -117,7 +117,7 @@ object administrador {
             game.addVisual(pantallaConVidas)
             game.addVisual(marcadorFinal)
             game.addVisual(marcadorVidasFinal)
-            keyboard.space().onPressDo({ self.iniciar() game.addVisual(pantallaGameOver) })
+            keyboard.space().onPressDo({ self.iniciar()})
             keyboard.r().onPressDo({ self.continuarConVida() })
         } else {
             game.addVisual(pantallaGameOver)
