@@ -49,13 +49,16 @@ object marcadorVidas {
     method textColor() = "FF5050FF"
     method chocarCon(otro) {}
 }
-
+object marcadorVidasFinal {
+    method position() = game.at(7, 10) 
+    method text() = "VIDAS: " + colectivo.vidas().toString()
+    method textColor() = "FF5050FF"
+}
 object administrador {
     var property nivel = nivel1 
     method iniciar() {
         game.clear()
         game.addVisual(pantallaInicio) 
-        keyboard.space().onPressDo({ self.jugar(nivel1) })
         keyboard.num1().onPressDo({ self.jugar(nivel1) })
         keyboard.num2().onPressDo({ self.jugar(nivel2) })
     }
@@ -87,7 +90,7 @@ object administrador {
         keyboard.left().onPressDo({ colectivo.doblar(izquierda) })
         keyboard.right().onPressDo({ colectivo.doblar(derecha) })
 
-        game.onTick(colectivo.velocidad(), "movimientoColectivo", { colectivo.avanzar() })
+        game.onTick(300, "movimientoColectivo", { colectivo.avanzar() })
         if (nivel.pasajeroSeMueveSolo()) {
         game.onTick(6000, "movimientoPasajero", { pasajero.moverse() })
         }
@@ -104,15 +107,18 @@ object administrador {
     }
 
     
-    method perder() {
+     method perder() {
         game.clear()
         if (colectivo.tieneVidas()) {
             game.addVisual(pantallaConVidas)
-            keyboard.space().onPressDo({ self.iniciar() })
+            game.addVisual(marcadorFinal)
+            game.addVisual(marcadorVidasFinal)
+            keyboard.space().onPressDo({ self.iniciar() game.addVisual(pantallaGameOver) })
             keyboard.r().onPressDo({ self.continuarConVida() })
         } else {
             game.addVisual(pantallaGameOver)
             game.addVisual(marcadorFinal)
+            game.addVisual(marcadorVidasFinal)
             keyboard.space().onPressDo({ self.iniciar() })
         }
     }
