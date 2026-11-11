@@ -17,15 +17,15 @@ class Obstaculo {
         game.onTick(self.intervalo(), "movimiento" + self.identity(), { self.moverse() })
         game.onCollideDo(self, { objeto => objeto.chocarCon(self) })
     }
-    
+
     method chocarCon(otro) {}
 
-    method colisionarConColectivo(){
-		game.say(colectivo, self.mensajeColision())
-		administrador.perder()
+    method colisionarConColectivo() {
+        game.say(colectivo, self.mensajeColision())
+        administrador.perder()
     }
 
-    method tiempoDeEspera(){
+    method tiempoDeEspera() {
         game.removeVisual(self)
         game.schedule(self.intervalo(), { game.addVisual(self) })
     }

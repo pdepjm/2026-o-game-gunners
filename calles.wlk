@@ -1,7 +1,7 @@
 class SeguimientoCalle {
   var property position
 
-  method chocarCon(otro) {} 
+  method chocarCon(otro) {}
 
   method posicionContraria(posicion) {
     if (posicion.x() == -1) {
@@ -20,24 +20,23 @@ class SeguimientoCalle {
 object generadorCalles {
 
 	method calleSalida(posicion) {
-	const calle = new SeguimientoCalle(position = posicion)
-	game.addVisual(calle)
+	  const calle = new SeguimientoCalle(position = posicion)
+	  game.addVisual(calle)
 	
-	game.onCollideDo(calle, { col =>
-	col.position(calle.posicionContraria(col.position()))
-		})	
-	} 
+	  game.onCollideDo(calle, { col =>
+	    col.position(calle.posicionContraria(col.position()))
+	  })	
+	}
 
   method generar() {
     (0 .. game.width() - 1).forEach({ i =>
-        self.calleSalida(game.at(i, -1))
-        self.calleSalida(game.at(i, game.height()))
+      self.calleSalida(game.at(i, -1))
+      self.calleSalida(game.at(i, game.height()))
     })
 
     (0 .. game.height() - 1).forEach({ i =>
-        self.calleSalida(game.at(-1, i))
-        self.calleSalida(game.at(game.width(), i))
+      self.calleSalida(game.at(-1, i))
+      self.calleSalida(game.at(game.width(), i))
     })
   }
 }
-    

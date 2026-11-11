@@ -11,7 +11,7 @@ object colectivo {
     var primerVagon = null
 
     method image() = "cabeza114_" + direccion.nombre() + ".png"
-    
+
     method reiniciar() {
         position = administrador.nivel().posicionInicial()
         direccion = derecha
@@ -40,7 +40,7 @@ object colectivo {
     }
 
     method doblar(nuevaDireccion) {
-        if(direccion.opuesta() != nuevaDireccion && direccion != nuevaDireccion){
+        if (direccion.opuesta() != nuevaDireccion && direccion != nuevaDireccion) {
             direccion = nuevaDireccion
         }
     }
@@ -83,9 +83,9 @@ object colectivo {
         cantidad.times({ x => self.agregarVagon() })
     }
 
-    method agregarVagon () {
+    method agregarVagon() {
         var nuevoVagon = null
-        
+
         if (vagones.isEmpty()) {
             const posAtras = self.posicionAtras(position, direccion)
             nuevoVagon = new Vagon(position = posAtras, direccion = direccion)
@@ -124,21 +124,21 @@ object colectivo {
     method cambiarVelocidad(nuevaVelocidad) {
         velocidad = nuevaVelocidad
         game.removeTickEvent("movimientoColectivo")
-        game.onTick(nuevaVelocidad, "movimientoColectivo", {self.avanzar()})
+        game.onTick(nuevaVelocidad, "movimientoColectivo", { self.avanzar() })
     }
 
     method relentizar() {
         self.cambiarVelocidad(600)
-        game.schedule(5000, {self.cambiarVelocidad(300)})
+        game.schedule(5000, { self.cambiarVelocidad(300) })
     }
 }
 
 class Vagon {
     var property position
-    var property direccion 
+    var property direccion
     var property siguiente = null
     var property direccionAnterior = null
-    
+
     method prefijoImagen() {
         if (direccionAnterior != null && direccionAnterior != direccion) {
             return "curva114_" + direccionAnterior.nombre() + "_"
@@ -166,34 +166,34 @@ class Vagon {
 
 object pasajero {
     var property position = game.center()
-    
+
     method image() = "pasajero.png"
-    
+
     method moverse() {
         position = administrador.nivel().posicionAleatoria()
     }
 
     method chocarCon(otro) {}
 
-    method colisionarConColectivo(){
-		colectivo.sumarPasajeros(1)
-		self.moverse()
+    method colisionarConColectivo() {
+        colectivo.sumarPasajeros(1)
+        self.moverse()
     }
 }
 
 object pasajeroVip {
     var property position = game.at(2, 11)
-    
+
     method image() = "pasajero_vip.png"
-    
+
     method moverse() {
         position = administrador.nivel().posicionAleatoria()
     }
 
     method chocarCon(otro) {}
 
-    method colisionarConColectivo(){
-		colectivo.sumarPasajeros(3)
-		self.moverse()
+    method colisionarConColectivo() {
+        colectivo.sumarPasajeros(3)
+        self.moverse()
     }
 }
