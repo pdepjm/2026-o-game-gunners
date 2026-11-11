@@ -21,7 +21,7 @@ object pantallaConVidas {
 }
 object fondoCalle {
     method position() = game.at(0, 0)
-    method image() = "calle.png" 
+    method image() = "calle.png"
     method chocarCon(otro) {}
 }
 object fondoParedes {
@@ -31,14 +31,14 @@ object fondoParedes {
 }
 
 object marcador {
-    method position() = game.at(1, 14) 
+    method position() = game.at(1, 14)
     method text() = "PUNTOS: " + colectivo.puntaje().toString()
-    method textColor() = "FFFF00FF" 
+    method textColor() = "FFFF00FF"
     method chocarCon(otro) {}
 }
 
 object marcadorFinal {
-    method position() = game.at(7, 11) 
+    method position() = game.at(7, 11)
     method text() = "PUNTAJE FINAL: " + colectivo.puntaje().toString()
     method textColor() = "FFFFFFFF"
 }
@@ -54,8 +54,9 @@ object marcadorVidasFinal {
     method text() = "VIDAS: " + colectivo.vidas().toString()
     method textColor() = "FF5050FF"
 }
+
 object administrador {
-    var property nivel = nivel1 
+    var property nivel = nivel1
     method iniciar() {
         game.clear()
         game.addVisual(pantallaInicio) 
@@ -109,8 +110,7 @@ object administrador {
         })
     }
 
-    
-     method perder() {
+    method perder() {
         game.clear()
         if (colectivo.tieneVidas()) {
             game.addVisual(pantallaConVidas)
