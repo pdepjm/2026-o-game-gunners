@@ -19,6 +19,7 @@ object pantallaConVidas {
     method position() = game.at(0, 0)
     method image() = "pantalla_con_vidas.png"
 }
+
 object fondoCalle {
     method position() = game.at(0, 0)
     method image() = "calle.png"

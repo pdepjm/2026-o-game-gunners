@@ -58,6 +58,7 @@ object colectivo {
         if (self.chocoConsigoMismo()) {
             administrador.perder()
         } else if (administrador.nivel().esPared(position)) {
+            position = posicionAnterior 
             self.chocarConPared()
         }
     }

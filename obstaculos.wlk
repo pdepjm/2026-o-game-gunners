@@ -47,19 +47,6 @@ class Cabra inherits Obstaculo {
     }
 }
 
-class Vip inherits Obstaculo {
-    override method image() = "pasajero_vip.png"
-    override method intervalo() = 5000
-    override method mensajeColision() = "¡Ahora tengo tres colas más!"
-
-    override method colisionarConColectivo() {
-        game.say(colectivo, self.mensajeColision())
-        colectivo.agregarVagones(3)
-        colectivo.puntaje(colectivo.puntaje() + 30)
-        self.moverse()
-    }
-}
-
 class VallaBloqueo inherits Obstaculo {
     override method image() = "valla.png"
     override method mensajeColision() = "¡Choqué contra la zona clausurada!"
