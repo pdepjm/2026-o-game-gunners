@@ -1,9 +1,201 @@
-import example.pepita
+import entidades.*
+import obstaculos.*
+import direcciones.*
+import Inicioyfin.*
+import calles.*
 
-describe "group of tests for pepita" {
+describe "Colectivo" {
+    method initialize() {
+        game.width(15)
+        game.height(15)
+        colectivo.reiniciar()
+    }
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
-  }
+    test "Arranca sin vagones y sin puntaje" {
+        assert.that(colectivo.vagones().isEmpty())
+        assert.equals(0, colectivo.puntaje())
+    }
 
+    test "El colectivo puede doblar en todos los sentidos" {
+        colectivo.doblar(abajo)
+        assert.equals(abajo, colectivo.direccion())
+        colectivo.doblar(izquierda)
+        assert.equals(izquierda, colectivo.direccion())
+        colectivo.doblar(arriba)
+        assert.equals(arriba, colectivo.direccion())
+        colectivo.doblar(derecha)
+        assert.equals(derecha, colectivo.direccion())
+    }
+    test "No se puede doblar hacia la dirección opuesta, se ignora la acción" {
+        colectivo.direccion(derecha)
+        colectivo.doblar(izquierda)
+        assert.equals(derecha, colectivo.direccion())
+    }
+
+    test "Al reanudar con vida extra se guardan las propiedades y se descuenta la vida" {
+        colectivo.vidas(1)
+        colectivo.agregarVagones(4)
+        colectivo.gastarVida()
+        assert.equals(0, colectivo.vidas())
+        assert.equals(4, colectivo.vagones().size())
+    }
+}
+
+describe "Pasajeros" {
+    method initialize() {
+        game.width(15)
+        game.height(15)
+        colectivo.reiniciar()
+    }
+
+    test "Al chocar con el colectivo le suma un vagón y 10 puntos" {
+        pasajero.colisionarConColectivo()
+        assert.equals(10, colectivo.puntaje())
+        assert.equals(1, colectivo.vagones().size())
+    }
+
+    test "El pasajero se mueve aleatoriamente" {
+        const posicionAnterior = pasajero.position()
+        pasajero.moverse()
+        assert.notEquals(posicionAnterior, pasajero.position())
+    }
+
+    test "El pasajero vip agrega tres vagones al colectivo y 30 puntos" {
+        pasajeroVip.colisionarConColectivo()
+        assert.equals(3, colectivo.vagones().size())
+        assert.equals(30, colectivo.puntaje())
+    }
+
+    test "El pasajero VIP se mueve aleatoriamente" {
+        const posicionAnterior = pasajeroVip.position()
+        pasajeroVip.moverse()
+        assert.notEquals(posicionAnterior, pasajeroVip.position())
+    }
+}
+
+describe "direcciones" {
+    test "Cada dirección avanza una casilla en su sentido" {
+        const p = game.at(5, 5)
+        assert.equals(game.at(5, 6), arriba.avanzar(p))
+        assert.equals(game.at(5, 4), abajo.avanzar(p))
+        assert.equals(game.at(4, 5), izquierda.avanzar(p))
+        assert.equals(game.at(6, 5), derecha.avanzar(p))
+    }
+
+    test "Cada dirección reconoce su opuesta" {
+        assert.equals(izquierda, derecha.opuesta())
+        assert.equals(derecha, izquierda.opuesta())
+        assert.equals(arriba, abajo.opuesta())
+        assert.equals(abajo, arriba.opuesta())
+    }
+}
+
+describe "Obstáculos" {
+    method initialize() {
+        game.width(15)
+        game.height(15)
+        colectivo.reiniciar()
+    }
+
+    test "La cabra le saca un vagón al colectivo que lleva pasajeros" {
+        colectivo.agregarVagones(2)
+        cabra.colisionarConColectivo()
+        assert.equals(1, colectivo.vagones().size())
+    }
+
+    test "La cabra hace perder al colectivo sin vagones" {
+        cabra.colisionarConColectivo()
+        assert.that(game.hasVisual(pantallaGameOver))
+    }
+
+    test "Al caer en un pozo se pierde automáticamente" {
+        pozo.colisionarConColectivo()
+        assert.that(game.hasVisual(pantallaGameOver))
+    }
+
+    test "Al chocar con un corazón se suma una vida extra" {
+        corazon.colisionarConColectivo()
+        assert.equals(1, colectivo.vidas())
+    }
+
+    test "La mancha de aceite no hace perder ni quita vagones" {
+        colectivo.agregarVagones(2)
+        manchaAceite.colisionarConColectivo()
+        assert.equals(2, colectivo.vagones().size())
+        assert.notThat(game.hasVisual(pantallaGameOver))
+    }
+
+    test "La mancha de aceite disminuye la velocidad del colectivo" {
+        manchaAceite.colisionarConColectivo()
+        assert.equals(600, colectivo.velocidad())
+    }
+
+    test "Al chocar con el cono se clausura una parte del tablero" {
+        clausura.colisionarConColectivo()
+        assert.equals(15, game.allVisuals().count({ o => o.image() == "valla.png" }))
+    }
+
+    test "La clausura no hace perder ni quita vagones" {
+        colectivo.agregarVagones(2)
+        clausura.colisionarConColectivo()
+        assert.equals(2, colectivo.vagones().size())
+        assert.notThat(game.hasVisual(pantallaGameOver))
+    }
+}
+
+describe "Pantallas" {
+    method initialize() {
+        game.width(15)
+        game.height(15)
+        colectivo.reiniciar()
+    }
+
+    test "Al perder sin vidas se muestra la pantalla de Game Over" {
+        colectivo.vidas(0)
+        administrador.perder()
+        assert.that(game.hasVisual(pantallaGameOver))
+    }
+
+    test "Al perder con vidas se muestra la pantalla de reanudar con vida extra" {
+        colectivo.vidas(1)
+        administrador.perder()
+        assert.that(game.hasVisual(pantallaConVidas))
+    }
+}
+
+describe "Calles" {
+    method initialize() {
+        game.width(15)
+        game.height(15)
+    }
+
+    test "Al abandonar el tablero horizontalmente aparece por el lado contrario" {
+        const calle = new SeguimientoCalle(position = game.origin())
+        const p = game.at(0, 0)
+        assert.equals(game.at(14, 0), calle.posicionContraria(izquierda.avanzar(p)))
+    }
+
+    test "Al abandonar el tablero verticalmente aparece por el lado contrario" {
+        const calle = new SeguimientoCalle(position = game.origin())
+        const p = game.at(0, 0)
+        assert.equals(game.at(0, 14), calle.posicionContraria(abajo.avanzar(p)))
+    }
+}
+
+describe "Puntaje" {
+    method initialize() {
+        game.width(15)
+        game.height(15)
+    }
+
+    test "El marcador en partida se muestra correctamente en pantalla" {
+        administrador.armarPartida()
+        assert.that(game.hasVisual(marcador))
+    }
+
+    test "El marcador final se muestra correctamente en pantalla" {
+        administrador.armarPartida()
+        administrador.perder()
+        assert.that(game.hasVisual(marcadorFinal))
+    }
 }

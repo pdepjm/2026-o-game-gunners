@@ -1,0 +1,16 @@
+import wollok.game.*
+import entidades.*
+import obstaculos.*
+import direcciones.*
+import calles.*
+import Inicioyfin.*
+
+program L114Game {
+    game.title("114")
+    game.height(15)
+    game.width(15)
+
+    administrador.iniciar()
+
+    game.start()
+}
